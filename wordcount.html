@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Word Counter - Count Words & Characters | FreeImageConvert</title>
+    <meta name="description" content="Count words, characters, and sentences instantly. Free online word counter for essays, blogs, and documents.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ FreeImageConvert</h1>
+        <div class="tagline">Free online tools</div>
+    </div>
+
+    <div class="tools-nav">
+        <a href="index.html">← Back to all tools</a>
+        <span>|</span>
+        <a href="ocr.html">📷 OCR</a>
+        <a href="convert.html">🖼️ Converter</a>
+        <a href="resize.html">📏 Resizer</a>
+        <a href="crop.html">✂️ Cropper</a>
+        <a href="wordcount.html">📝 Word</a>
+        <a href="tts.html">🔊 TTS</a>
+        <a href="qr.html">📱 QR</a>
+        <a href="color.html">🎨 Color</a>
+        <a href="password.html">🔑 Password</a>
+    </div>
+
+    <div class="tool-panel">
+        <div class="tool-title">📝 Word & Character Counter</div>
+        <textarea id="wordInput" rows="8" placeholder="Type or paste your text here..."></textarea>
+        <div class="stats-box">
+            <p><strong>📄 Words:</strong> <span id="wordCount">0</span> &nbsp;|&nbsp; <strong>🔤 Characters:</strong> <span id="charCount">0</span> &nbsp;|&nbsp; <strong>📖 Sentences:</strong> <span id="sentenceCount">0</span></p>
+        </div>
+    </div>
+
+    <div class="social-section">
+        <h3>❤️ Enjoying this tool?</h3>
+        <div class="social-buttons">
+            <a href="#" class="social-btn facebook" onclick="shareFacebook()">📘 Facebook</a>
+            <a href="#" class="social-btn twitter" onclick="shareTwitter()">🐦 Twitter</a>
+            <a href="#" class="social-btn whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</a>
+        </div>
+    </div>
+
+    <footer>© 2025 FreeImageConvert.xyz — All tools run locally.</footer>
+</div>
+
+<script src="script.js"></script>
+<script>
+    const wi = document.getElementById('wordInput');
+    function updateCounts() {
+        const t = wi.value;
+        const words = t.trim() === '' ? 0 : t.trim().split(/\s+/).length;
+        const chars = t.length;
+        const sentences = t.split(/[.!?]+/).filter(x => x.trim().length > 0).length;
+        document.getElementById('wordCount').innerText = words;
+        document.getElementById('charCount').innerText = chars;
+        document.getElementById('sentenceCount').innerText = sentences;
+    }
+    wi.addEventListener('input', updateCounts);
+    updateCounts();
+
+    function shareFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=Free%20Word%20Counter&url=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareWhatsApp() { window.open(`https://wa.me/?text=Check%20out%20this%20free%20word%20counter!%20${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+</script>
+</body>
+</html>

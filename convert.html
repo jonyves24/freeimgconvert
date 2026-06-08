@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free JPG to PNG Converter - Convert Images Online | FreeImageConvert</title>
+    <meta name="description" content="Convert JPG to PNG and PNG to JPG online for free. No registration, no file uploads. Fast and private image conversion.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ FreeImageConvert</h1>
+        <div class="tagline">Free online tools</div>
+    </div>
+
+    <div class="tools-nav">
+        <a href="index.html">← Back to all tools</a>
+        <span>|</span>
+        <a href="ocr.html">📷 OCR</a>
+        <a href="convert.html">🖼️ Converter</a>
+        <a href="resize.html">📏 Resizer</a>
+        <a href="crop.html">✂️ Cropper</a>
+        <a href="wordcount.html">📝 Word</a>
+        <a href="tts.html">🔊 TTS</a>
+        <a href="qr.html">📱 QR</a>
+        <a href="color.html">🎨 Color</a>
+        <a href="password.html">🔑 Password</a>
+    </div>
+
+    <div class="tool-panel">
+        <div class="tool-title">🖼️ JPG ↔ PNG Converter</div>
+        <div class="upload-area" id="convUploadArea" onclick="document.getElementById('convertInput').click()">
+            <p>📸 Click to upload an image</p>
+            <small>Supports JPG, PNG, JPEG</small>
+        </div>
+        <input type="file" id="convertInput" accept="image/*" style="display:none">
+        <div id="convStatus"></div>
+        <select id="convertFormat" class="compact-select">
+            <option value="image/png">PNG</option>
+            <option value="image/jpeg">JPEG</option>
+        </select>
+        <button onclick="convertImageExec()">🔄 Convert & Download</button>
+        <div id="convResult" class="result-area">
+            <img id="convertedPreview" class="preview-img">
+        </div>
+    </div>
+
+    <div class="social-section">
+        <h3>❤️ Enjoying this tool?</h3>
+        <div class="social-buttons">
+            <a href="#" class="social-btn facebook" onclick="shareFacebook()">📘 Facebook</a>
+            <a href="#" class="social-btn twitter" onclick="shareTwitter()">🐦 Twitter</a>
+            <a href="#" class="social-btn whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</a>
+        </div>
+    </div>
+
+    <footer>© 2025 FreeImageConvert.xyz — All tools run locally.</footer>
+</div>
+
+<script src="script.js"></script>
+<script>
+    let convBlob = null;
+    document.getElementById('convertInput').addEventListener('change', e => {
+        const f = e.target.files[0];
+        if (!f) return;
+        updateUploadArea('convUploadArea', f.name);
+        showStatus('convStatus', 'Processing image...', 'info');
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                canvas.getContext('2d').drawImage(img, 0, 0);
+                const fmt = document.getElementById('convertFormat').value;
+                canvas.toBlob(blob => {
+                    convBlob = blob;
+                    const url = URL.createObjectURL(blob);
+                    document.getElementById('convertedPreview').src = url;
+                    document.getElementById('convResult').classList.add('show');
+                    showStatus('convStatus', 'Ready to download', 'success');
+                }, fmt);
+            };
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(f);
+    });
+
+    function convertImageExec() {
+        if (convBlob) {
+            const fmt = document.getElementById('convertFormat').value;
+            const ext = fmt === 'image/png' ? 'png' : 'jpg';
+            const url = URL.createObjectURL(convBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `converted.${ext}`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showStatus('convStatus', '✅ Download started!', 'success');
+        } else {
+            showStatus('convStatus', '⚠️ Upload an image first', 'error');
+        }
+    }
+
+    function shareFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=Free%20JPG%20to%20PNG%20Converter&url=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareWhatsApp() { window.open(`https://wa.me/?text=Check%20out%20this%20free%20image%20converter!%20${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+</script>
+</body>
+</html>

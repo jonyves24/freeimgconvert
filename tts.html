@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Text to Speech - Read Aloud Online | FreeImageConvert</title>
+    <meta name="description" content="Convert text to speech online for free. Choose from multiple voices. Listen to any text read aloud.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ FreeImageConvert</h1>
+        <div class="tagline">Free online tools</div>
+    </div>
+
+    <div class="tools-nav">
+        <a href="index.html">← Back to all tools</a>
+        <span>|</span>
+        <a href="ocr.html">📷 OCR</a>
+        <a href="convert.html">🖼️ Converter</a>
+        <a href="resize.html">📏 Resizer</a>
+        <a href="crop.html">✂️ Cropper</a>
+        <a href="wordcount.html">📝 Word</a>
+        <a href="tts.html">🔊 TTS</a>
+        <a href="qr.html">📱 QR</a>
+        <a href="color.html">🎨 Color</a>
+        <a href="password.html">🔑 Password</a>
+    </div>
+
+    <div class="tool-panel">
+        <div class="tool-title">🔊 Text to Speech</div>
+        <textarea id="ttsInput" rows="5" placeholder="Enter text to speak..."></textarea>
+        <select id="voiceSelect"></select>
+        <button onclick="speakText()">🔊 Speak</button>
+        <button onclick="stopSpeech()" class="btn-secondary">⏹️ Stop</button>
+        <div id="ttsStatus"></div>
+        <p class="info-note">ℹ️ No download option, but you can listen with different voices.</p>
+    </div>
+
+    <div class="social-section">
+        <h3>❤️ Enjoying this tool?</h3>
+        <div class="social-buttons">
+            <a href="#" class="social-btn facebook" onclick="shareFacebook()">📘 Facebook</a>
+            <a href="#" class="social-btn twitter" onclick="shareTwitter()">🐦 Twitter</a>
+            <a href="#" class="social-btn whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</a>
+        </div>
+    </div>
+
+    <footer>© 2025 FreeImageConvert.xyz — All tools run locally.</footer>
+</div>
+
+<script src="script.js"></script>
+<script>
+    let voices = [];
+    function loadVoices() {
+        voices = window.speechSynthesis.getVoices();
+        const select = document.getElementById('voiceSelect');
+        select.innerHTML = '';
+        voices.forEach(v => {
+            const opt = document.createElement('option');
+            opt.value = v.name;
+            opt.textContent = `${v.name} (${v.lang})`;
+            select.appendChild(opt);
+        });
+    }
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    setTimeout(loadVoices, 100);
+
+    function speakText() {
+        const text = document.getElementById('ttsInput').value;
+        if (!text.trim()) {
+            showStatus('ttsStatus', '⚠️ Enter some text first', 'error');
+            return;
+        }
+        const utter = new SpeechSynthesisUtterance(text);
+        const selected = document.getElementById('voiceSelect').value;
+        const voice = voices.find(v => v.name === selected);
+        if (voice) utter.voice = voice;
+        window.speechSynthesis.speak(utter);
+        showStatus('ttsStatus', '🔊 Speaking...', 'info');
+    }
+
+    function stopSpeech() {
+        window.speechSynthesis.cancel();
+        showStatus('ttsStatus', '⏹️ Stopped', 'info');
+    }
+
+    function shareFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=Free%20Text%20to%20Speech&url=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareWhatsApp() { window.open(`https://wa.me/?text=Check%20out%20this%20free%20TTS%20tool!%20${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+</script>
+</body>
+</html>

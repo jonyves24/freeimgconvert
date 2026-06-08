@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free QR Code Generator - Create QR Codes Online | FreeImageConvert</title>
+    <meta name="description" content="Generate QR codes for free. Enter any text or URL and download as PNG. No signup required.">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ FreeImageConvert</h1>
+        <div class="tagline">Free online tools</div>
+    </div>
+
+    <div class="tools-nav">
+        <a href="index.html">← Back to all tools</a>
+        <span>|</span>
+        <a href="ocr.html">📷 OCR</a>
+        <a href="convert.html">🖼️ Converter</a>
+        <a href="resize.html">📏 Resizer</a>
+        <a href="crop.html">✂️ Cropper</a>
+        <a href="wordcount.html">📝 Word</a>
+        <a href="tts.html">🔊 TTS</a>
+        <a href="qr.html">📱 QR</a>
+        <a href="color.html">🎨 Color</a>
+        <a href="password.html">🔑 Password</a>
+    </div>
+
+    <div class="tool-panel">
+        <div class="tool-title">📱 QR Code Generator</div>
+        <input type="text" id="qrText" placeholder="Enter text or URL...">
+        <button onclick="generateQR()">🎲 Generate QR</button>
+        <div id="qrResult" class="result-area" style="text-align:center">
+            <div id="qrcodeContainer" class="qr-center"></div>
+            <button onclick="downloadQR()">💾 Download PNG</button>
+        </div>
+        <div id="qrStatus"></div>
+    </div>
+
+    <div class="social-section">
+        <h3>❤️ Enjoying this tool?</h3>
+        <div class="social-buttons">
+            <a href="#" class="social-btn facebook" onclick="shareFacebook()">📘 Facebook</a>
+            <a href="#" class="social-btn twitter" onclick="shareTwitter()">🐦 Twitter</a>
+            <a href="#" class="social-btn whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</a>
+        </div>
+    </div>
+
+    <footer>© 2025 FreeImageConvert.xyz — All tools run locally.</footer>
+</div>
+
+<script src="script.js"></script>
+<script>
+    let currentQR = null;
+    function generateQR() {
+        const text = document.getElementById('qrText').value.trim();
+        if (!text) {
+            alert('Please enter text or URL');
+            return;
+        }
+        const container = document.getElementById('qrcodeContainer');
+        container.innerHTML = '';
+        try {
+            currentQR = new QRCode(container, {
+                text: text,
+                width: 250,
+                height: 250,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            document.getElementById('qrResult').classList.add('show');
+        } catch (e) {
+            alert('QR generation failed: ' + e.message);
+        }
+    }
+
+    function downloadQR() {
+        const container = document.getElementById('qrcodeContainer');
+        const canvas = container.querySelector('canvas');
+        if (!canvas) {
+            alert('Generate a QR code first');
+            return;
+        }
+        const link = document.createElement('a');
+        link.download = 'qrcode.png';
+        link.href = canvas.toDataURL();
+        link.click();
+    }
+
+    function downloadQR() {
+    const container = document.getElementById('qrcodeContainer');
+    const canvas = container.querySelector('canvas');
+    if (!canvas) {
+        alert('Generate a QR code first');
+        return;
+    }
+    const link = document.createElement('a');
+    link.download = 'qrcode.png';
+    link.href = canvas.toDataURL();
+    link.click();
+    showStatus('qrStatus', '✅ QR code downloaded successfully!', 'success', true);
+}
+
+    function shareFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=Free%20QR%20Code%20Generator&url=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareWhatsApp() { window.open(`https://wa.me/?text=Check%20out%20this%20free%20QR%20generator!%20${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+</script>
+</body>
+</html>

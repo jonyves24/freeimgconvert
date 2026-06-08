@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Image to Text OCR - Extract Text from Images | FreeImageConvert</title>
+    <meta name="description" content="Convert images to text instantly with our free OCR tool. 100% private, no upload required. Extract text from JPG, PNG, and more.">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ FreeImageConvert</h1>
+        <div class="tagline">Free online tools</div>
+    </div>
+
+    <div class="tools-nav">
+        <a href="index.html">← Back to all tools</a>
+        <span>|</span>
+        <a href="ocr.html">📷 OCR</a>
+        <a href="convert.html">🖼️ Converter</a>
+        <a href="resize.html">📏 Resizer</a>
+        <a href="crop.html">✂️ Cropper</a>
+        <a href="wordcount.html">📝 Word</a>
+        <a href="tts.html">🔊 TTS</a>
+        <a href="qr.html">📱 QR</a>
+        <a href="color.html">🎨 Color</a>
+        <a href="password.html">🔑 Password</a>
+    </div>
+
+    <div class="tool-panel">
+        <div class="tool-title">📷 Image to Text (OCR)</div>
+        <div class="upload-area" id="ocrUploadArea" onclick="document.getElementById('ocrInput').click()">
+            <p>📸 Click to upload image (JPG, PNG)</p>
+            <small>Extracts printed English text</small>
+        </div>
+        <input type="file" id="ocrInput" accept="image/*" style="display:none">
+        <div id="ocrStatus"></div>
+        <button id="ocrBtn" onclick="performOCR()" class="btn-primary">🔍 Extract Text</button>
+        <button id="ocrResetBtn" onclick="resetOCR()" class="btn-secondary">🔄 New Request</button>
+        <div id="ocrResult" class="result-area">
+            <h3>Extracted text</h3>
+            <textarea id="ocrText" rows="6" readonly></textarea>
+            <button onclick="copyText('ocrText')">📋 Copy</button>
+        </div>
+    </div>
+
+    <div class="social-section">
+        <h3>❤️ Enjoying this tool?</h3>
+        <div class="social-buttons">
+            <a href="#" class="social-btn facebook" onclick="shareFacebook()">📘 Facebook</a>
+            <a href="#" class="social-btn twitter" onclick="shareTwitter()">🐦 Twitter</a>
+            <a href="#" class="social-btn whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</a>
+        </div>
+    </div>
+
+    <footer>© 2025 FreeImageConvert.xyz — All tools run locally.</footer>
+</div>
+
+<script src="script.js"></script>
+<script>
+    let ocrFile = null;
+    document.getElementById('ocrInput').addEventListener('change', e => {
+        ocrFile = e.target.files[0];
+        if (ocrFile) {
+            updateUploadArea('ocrUploadArea', ocrFile.name);
+            showStatus('ocrStatus', `Ready: ${ocrFile.name}`, 'success');
+            document.getElementById('ocrBtn').disabled = false;
+        } else {
+            updateUploadArea('ocrUploadArea', null);
+            document.getElementById('ocrBtn').disabled = true;
+        }
+    });
+
+    async function performOCR() {
+        if (!ocrFile) { showStatus('ocrStatus', 'Select an image first', 'error'); return; }
+        const btn = document.getElementById('ocrBtn');
+        const orig = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loader"></span> Processing OCR...';
+        document.getElementById('ocrResult').classList.add('show');
+        document.getElementById('ocrText').value = 'Loading Tesseract...';
+        try {
+            const { data: { text } } = await Tesseract.recognize(ocrFile, 'eng');
+            document.getElementById('ocrText').value = text || 'No text found';
+            showStatus('ocrStatus', '✅ Successfully converted to text!', 'success');
+        } catch (err) {
+            document.getElementById('ocrText').value = 'Error: ' + err.message;
+            showStatus('ocrStatus', 'OCR failed', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = orig;
+        }
+    }
+
+    function resetOCR() {
+        ocrFile = null;
+        document.getElementById('ocrInput').value = '';
+        updateUploadArea('ocrUploadArea', null);
+        document.getElementById('ocrText').value = '';
+        document.getElementById('ocrResult').classList.remove('show');
+        showStatus('ocrStatus', 'Ready for new image', 'info');
+    }
+
+    function shareFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=Free%20Image%20to%20Text%20OCR%20tool&url=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareWhatsApp() { window.open(`https://wa.me/?text=Check%20out%20this%20free%20OCR%20tool!%20${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+</script>
+</body>
+</html>

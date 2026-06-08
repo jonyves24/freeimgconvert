@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Image Resizer - Resize Photos Online | FreeImageConvert</title>
+    <meta name="description" content="Resize images online for free. Enter custom width and height. Perfect for social media, email, and websites.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>⚡ FreeImageConvert</h1>
+        <div class="tagline">Free online tools</div>
+    </div>
+
+    <div class="tools-nav">
+        <a href="index.html">← Back to all tools</a>
+        <span>|</span>
+        <a href="ocr.html">📷 OCR</a>
+        <a href="convert.html">🖼️ Converter</a>
+        <a href="resize.html">📏 Resizer</a>
+        <a href="crop.html">✂️ Cropper</a>
+        <a href="wordcount.html">📝 Word</a>
+        <a href="tts.html">🔊 TTS</a>
+        <a href="qr.html">📱 QR</a>
+        <a href="color.html">🎨 Color</a>
+        <a href="password.html">🔑 Password</a>
+    </div>
+
+    <div class="tool-panel">
+        <div class="tool-title">📏 Image Resizer</div>
+        <div class="upload-area" id="resizeUploadArea" onclick="document.getElementById('resizeInput').click()">
+            <p>📸 Click to upload an image</p>
+            <small>Supports JPG, PNG, JPEG</small>
+        </div>
+        <input type="file" id="resizeInput" accept="image/*" style="display:none">
+        <div id="resizeStatus"></div>
+        <div class="resize-inputs">
+            <div><label>Width (px)</label><input type="number" id="width" placeholder="800"></div>
+            <div><label>Height (px)</label><input type="number" id="height" placeholder="600"></div>
+        </div>
+        <button onclick="resizeImageSimple()">📏 Resize & Download</button>
+        <div id="resizeResult" class="result-area">
+            <img id="resizedPreview" class="preview-img">
+        </div>
+    </div>
+
+    <div class="social-section">
+        <h3>❤️ Enjoying this tool?</h3>
+        <div class="social-buttons">
+            <a href="#" class="social-btn facebook" onclick="shareFacebook()">📘 Facebook</a>
+            <a href="#" class="social-btn twitter" onclick="shareTwitter()">🐦 Twitter</a>
+            <a href="#" class="social-btn whatsapp" onclick="shareWhatsApp()">💬 WhatsApp</a>
+        </div>
+    </div>
+
+    <footer>© 2025 FreeImageConvert.xyz — All tools run locally.</footer>
+</div>
+
+<script src="script.js"></script>
+<script>
+    let resizeImgObj = null;
+    document.getElementById('resizeInput').addEventListener('change', e => {
+        const f = e.target.files[0];
+        if (!f) return;
+        updateUploadArea('resizeUploadArea', f.name);
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const img = new Image();
+            img.onload = () => {
+                resizeImgObj = img;
+                document.getElementById('width').value = img.width;
+                document.getElementById('height').value = img.height;
+                showStatus('resizeStatus', '✅ Image loaded', 'success');
+            };
+            img.src = ev.target.result;
+        };
+        reader.readAsDataURL(f);
+    });
+
+    function resizeImageSimple() {
+        if (!resizeImgObj) {
+            showStatus('resizeStatus', '⚠️ Upload an image first', 'error');
+            return;
+        }
+        const w = parseInt(document.getElementById('width').value);
+        const h = parseInt(document.getElementById('height').value);
+        if (isNaN(w) || isNaN(h) || w < 1 || h < 1) {
+            showStatus('resizeStatus', '⚠️ Enter valid width and height', 'error');
+            return;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(resizeImgObj, 0, 0, w, h);
+        canvas.toBlob(blob => {
+            const url = URL.createObjectURL(blob);
+            document.getElementById('resizedPreview').src = url;
+            document.getElementById('resizeResult').classList.add('show');
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'resized.png';
+            a.click();
+            URL.revokeObjectURL(url);
+            showStatus('resizeStatus', '✅ Resized & downloaded!', 'success');
+        });
+    }
+
+    function shareFacebook() { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareTwitter() { window.open(`https://twitter.com/intent/tweet?text=Free%20Image%20Resizer&url=${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+    function shareWhatsApp() { window.open(`https://wa.me/?text=Check%20out%20this%20free%20image%20resizer!%20${encodeURIComponent(window.location.href)}`, '_blank'); return false; }
+</script>
+</body>
+</html>
